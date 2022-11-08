@@ -101,8 +101,9 @@ def get_listing_information(listing_id):
         for item in find_bedrooms:
             if "bedroom" in tag.text.strip():
                 bedrooms = tag.text.strip()
-                bedrooms = re.sub('\D+', "", bedrooms)
+                bedrooms = re.sub('\D', "", bedrooms)
     result = (policy_number, place_type, int(bedrooms))
+    print(result)
     return result
     
 
@@ -155,6 +156,13 @@ def write_csv(data, filename):
 
     This function should not return anything.
     """
+    f = open(filename, 'w')
+    header = "Listing Title, Cost, Listing ID, Policy Number, Place Type, Number of Bedrooms \n"
+    f.write(header)
+    new_data = sorted(data, key = lambda x: x[1])
+    for tup in new_data:
+        f.write(str(tup) + "\n")
+
     pass
 
 
