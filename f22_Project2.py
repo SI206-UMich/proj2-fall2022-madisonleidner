@@ -87,6 +87,10 @@ def get_listing_information(listing_id):
         if "Policy number" in tag.text.strip():
             find_number = tag.find('span', class_ = 'll4r2nl dir dir-ltr')
             policy_number = find_number.text.strip()
+            if "pending" in policy_number.lower():
+                policy_number = "Pending"
+            elif "not" in policy_number.lower():
+                policy_number = "Exempt"
     for tag in div_tags:
         find_place = tag.find('h2', class_ = '_14i3z6h')
         if "private" in find_place.text.strip():
@@ -103,7 +107,6 @@ def get_listing_information(listing_id):
                 bedrooms = tag.text.strip()
                 bedrooms = re.sub('\D', "", bedrooms)
     result = (policy_number, place_type, int(bedrooms))
-    print(result)
     return result
     
 
@@ -157,11 +160,12 @@ def write_csv(data, filename):
     This function should not return anything.
     """
     f = open(filename, 'w')
-    header = "Listing Title, Cost, Listing ID, Policy Number, Place Type, Number of Bedrooms \n"
+    header = "Listing Title,Cost,Listing ID,Policy Number,Place Type,Number of Bedrooms \n"
     f.write(header)
+    writer = csv.writer(f)
     new_data = sorted(data, key = lambda x: x[1])
-    for tup in new_data:
-        f.write(str(tup) + "\n")
+    writer.writerows(new_data)
+    
 
     pass
 
@@ -185,6 +189,16 @@ def check_policy_numbers(data):
     ]
 
     """
+    policy_rg = '20\d{2}-00\d{4}STR|STR-000\d{4}'
+    lst_number = []
+    for tup in data:
+        string_list = re.findall(policy_rg, tup[3])
+        if len(string_list) == 0 and tup[3] != "Pending" and tup[3] != "Exempt":
+                lst_number.append(tup[2])
+    print(lst_number)
+    return lst_number
+
+
     pass
 
 
