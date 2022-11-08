@@ -1,3 +1,4 @@
+# Worked with: Anna Kaplan and Lauren Snerson
 from xml.sax import parseString
 from bs4 import BeautifulSoup
 import re
@@ -16,7 +17,6 @@ def get_listings_from_search_results(html_file):
     in the format given below. Make sure to turn costs into ints.
 
     The listing id is found in the url of a listing. For example, for
-        https://www.airbnb.com/rooms/1944564
     the listing id is 1944564.
 .
 
@@ -25,6 +25,30 @@ def get_listings_from_search_results(html_file):
         ('Loft in Mission District', 210, '1944564'),  # example
     ]
     """
+    f = open(html_file, 'r')
+    contents = f.read()
+    f.close()
+    soup = BeautifulSoup(contents, 'html.parser')
+    div_tags = soup.find_all('div', class_ = 't1jojoys dir dir-ltr')
+    span_tags = soup.find_all('span', class_ = '_tyxjp1')
+    title_lst = []
+    price_lst = []
+    id_lst = []
+    for tag in div_tags:
+        title = tag.text.strip()
+        title_lst.append(title)
+        id = tag.get('id').strip('title_')
+        id_lst.append(id)
+    for tag in span_tags:
+        price = tag.text.strip('$')
+        price_lst.append(int(price))
+    lst = []
+    i = 0
+    while i < len(title_lst):
+        lst.append((title_lst[i], price_lst[i], id_lst[i]))
+        i += 1
+    return lst
+
     pass
 
 
