@@ -102,7 +102,6 @@ def get_listing_information(listing_id):
             if "bedroom" in tag.text.strip():
                 bedrooms = tag.text.strip(' · bedroom · ')
     result = (policy_number, place_type, int(bedrooms))
-    print(result)
     return result
     
 
@@ -123,6 +122,14 @@ def get_detailed_listing_database(html_file):
         ...
     ]
     """
+    results = []
+    first_part = get_listings_from_search_results(html_file)
+    for value in first_part:
+        second_part = get_listing_information(value[2])
+        results.append((value[0], value[1], value[2], second_part[0], second_part[1], second_part[2]))
+    print(results)
+    return results
+
     pass
 
 
