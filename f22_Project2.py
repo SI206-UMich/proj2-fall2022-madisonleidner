@@ -163,9 +163,9 @@ def write_csv(data, filename):
     This function should not return anything.
     """
     f = open(filename, 'w')
-    header = "Listing Title,Cost,Listing ID,Policy Number,Place Type,Number of Bedrooms\n"
-    f.write(header)
     writer = csv.writer(f)
+    header = ["Listing Title", "Cost", "Listing ID", "Policy Number", "Place Type","Number of Bedrooms"]
+    writer.writerow(header)
     new_data = sorted(data, key = lambda x: x[1])
     writer.writerows(new_data)
     
